@@ -1,0 +1,80 @@
+{% extends "../layouts/app.twig" %}
+
+{% block title %}Index{% endblock %}
+
+{% block content %}
+  <div class="row mt-5">
+    <div class="col-sm-12">
+      {% include "../common/success.twig" %}
+      {% include "../common/errors.twig" %}
+    </div>
+    <div class="col-sm-12">
+      <a href="/users/create" class="btn btn-success float-right">Add user</a>
+    </div>
+    <div class="col-sm-12 mt-2">
+      <table class="table table-hover">
+        <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if users|length %}
+          {% for user in users %}
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td>{{ user.name }}</td>
+              <td>{{ user.email }}</td>
+              <td>
+                <a href="/users/{{ user._id }}/edit" class="btn btn-primary btn-sm">Edit</a>
+                <a href="/users/{{ user._id }}" class="btn btn-danger btn-sm btn-delete-user">Delete</a>
+              </td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="4" class="text-center">No data to show</td>
+          </tr>
+        {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <form id="formDeleteUser" action="#" , method="POST">
+    <input type="hidden" name="_method" value="DELETE">
+    <div id="modalDeleteUser" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Delete User</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Are you sure you want to delete it?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-danger">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+      $('.btn-delete-user').click(function (event) {
+          event.preventDefault();
+          $('#formDeleteUser').attr('action', this.href);
+          $('#modalDeleteUser').modal('show');
+      });
+  </script>
+{% endblock %}
